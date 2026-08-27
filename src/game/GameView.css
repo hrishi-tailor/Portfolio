@@ -1,0 +1,65 @@
+.game-view {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #8fd3f4;
+}
+
+.game-view canvas {
+  display: block;
+  touch-action: none;
+}
+
+.game-hud-top {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 40;
+}
+
+.game-hud__progress {
+  background: rgba(16, 21, 18, 0.75);
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  backdrop-filter: blur(6px);
+}
+
+.game-hint {
+  position: fixed;
+  top: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  background: rgba(16, 21, 18, 0.8);
+  border: 1px solid var(--border-bright);
+  border-radius: 6px;
+  padding: 0.55rem 1rem;
+  font-size: 0.8rem;
+  color: var(--text);
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+
+.game-hint kbd {
+  display: inline-block;
+  border: 1px solid var(--border-bright);
+  border-radius: 3px;
+  padding: 0.05rem 0.35rem;
+  margin: 0 0.05rem;
+  font-family: var(--font-mono);
+  color: var(--amber);
+}
+
+@media (max-width: 560px) {
+  .game-hint {
+    font-size: 0.7rem;
+    padding: 0.45rem 0.7rem;
+    white-space: normal;
+    text-align: center;
+    width: min(90vw, 22rem);
+  }
+}

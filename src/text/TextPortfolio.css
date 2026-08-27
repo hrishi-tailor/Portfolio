@@ -1,0 +1,261 @@
+.page {
+  min-height: 100vh;
+}
+
+.wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 5rem;
+}
+
+.prompt {
+  color: var(--amber);
+}
+
+/* Hero */
+.hero {
+  margin-bottom: 4.5rem;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 0.5rem;
+  box-shadow: 0 0 6px var(--green);
+}
+
+.hero__name {
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  margin: 0.6rem 0 0.35rem;
+}
+
+.hero__role {
+  color: var(--text-dim);
+  font-size: 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.hero__tagline {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  color: var(--text);
+  margin: 0;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 4rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.section__command {
+  margin-bottom: 0.5rem;
+}
+
+.section__title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.body-text {
+  color: var(--text);
+  max-width: 62ch;
+  margin: 0 0 1rem;
+}
+
+/* Project tickets */
+.tickets {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ticket {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+.ticket__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.ticket__symbol {
+  font-size: 0.85rem;
+  color: var(--amber);
+  letter-spacing: 0.04em;
+}
+
+.ticket__status {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  border: 1px solid var(--border-bright);
+  color: var(--text-dim);
+}
+
+.ticket__status--live {
+  color: var(--green);
+  border-color: var(--green);
+}
+
+.ticket__status--in-progress {
+  color: var(--amber);
+  border-color: var(--amber-dim);
+}
+
+.ticket__name {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.ticket__pitch {
+  color: var(--text);
+  margin: 0 0 1rem;
+  max-width: 65ch;
+}
+
+.ticket__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  border-top: 1px dashed var(--border);
+  border-bottom: 1px dashed var(--border);
+  padding: 0.85rem 0;
+}
+
+.ticket__stats li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 9rem;
+}
+
+.ticket__stat-label {
+  font-size: 0.68rem;
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ticket__stat-value {
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.ticket__highlights {
+  margin: 0 0 1.1rem;
+  padding-left: 1.1rem;
+  color: var(--text-dim);
+  font-size: 0.92rem;
+}
+
+.ticket__highlights li {
+  margin-bottom: 0.5rem;
+  max-width: 68ch;
+}
+
+.ticket__highlights li::marker {
+  color: var(--amber-dim);
+}
+
+.ticket__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.pill {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--bg-panel-raised);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+
+.pill--outline {
+  background: transparent;
+}
+
+.ticket__link {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+/* Skills / watchlist */
+.watchlist {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem 2rem;
+}
+
+.watchlist__group .eyebrow {
+  margin-bottom: 0.6rem;
+}
+
+.watchlist__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+@media (max-width: 560px) {
+  .watchlist {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Contact console */
+.console {
+  font-family: var(--font-mono);
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.25rem 1.5rem;
+}
+
+.console p {
+  margin: 0 0 0.6rem;
+  font-size: 0.9rem;
+}
+
+.console p:last-child {
+  margin-bottom: 0;
+}
+
+.console__flag {
+  color: var(--text-faint);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.footer a {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.footer a:hover {
+  color: var(--amber);
+}

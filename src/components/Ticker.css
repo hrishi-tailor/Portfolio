@@ -1,0 +1,53 @@
+.ticker {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  overflow: hidden;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.ticker__track {
+  display: inline-flex;
+  animation: scroll 28s linear infinite;
+  padding: 0.5rem 0;
+}
+
+.ticker__item {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1.75rem;
+  white-space: nowrap;
+}
+
+.ticker__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track {
+    animation: none;
+  }
+  .ticker {
+    overflow-x: auto;
+  }
+}

@@ -1,0 +1,44 @@
+.touch-controls {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 60;
+  touch-action: none;
+}
+
+.touch-controls__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.touch-controls__btn {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-bright);
+  background: rgba(16, 21, 18, 0.85);
+  backdrop-filter: blur(6px);
+  color: var(--amber);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.touch-controls__btn:active {
+  background: rgba(255, 176, 0, 0.15);
+}
+
+/* Only show on coarse-pointer (touch) devices */
+@media (pointer: coarse) {
+  .touch-controls {
+    display: flex;
+  }
+}
