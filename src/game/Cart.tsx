@@ -15,17 +15,26 @@ const CART_RADIUS = 0.7;
 
 export type CartHandle = THREE.Group;
 
-/** Blocky wheel: outer black square with inner grey square */
+/** 12-sided blocky wheel (square with clipped corners resembling a circle) with outline rim and dark grey inner core */
 function WheelMesh() {
   return (
     <group>
-      {/* Outer black square tire */}
-      <RoundedBox args={[0.22, 0.54, 0.54]} radius={0.06} castShadow>
+      {/* 12-sided blocky tire: intersecting rounded blocks forming smooth clipped-corner polygon */}
+      <RoundedBox args={[0.22, 0.54, 0.36]} radius={0.04} castShadow>
         <meshStandardMaterial color="#181a18" roughness={0.8} />
       </RoundedBox>
-      {/* Inner grey square rim/hub */}
-      <RoundedBox args={[0.24, 0.28, 0.28]} radius={0.03}>
-        <meshStandardMaterial color="#8a909a" metalness={0.2} roughness={0.4} />
+      <RoundedBox args={[0.22, 0.36, 0.54]} radius={0.04} castShadow>
+        <meshStandardMaterial color="#181a18" roughness={0.8} />
+      </RoundedBox>
+
+      {/* Existing rim: mid-grey square functioning as the outer outline frame */}
+      <RoundedBox args={[0.24, 0.3, 0.3]} radius={0.03}>
+        <meshStandardMaterial color="#8a909a" metalness={0.25} roughness={0.35} />
+      </RoundedBox>
+
+      {/* Dark grey square rim inside the existing outline rim */}
+      <RoundedBox args={[0.25, 0.18, 0.18]} radius={0.02}>
+        <meshStandardMaterial color="#282c30" roughness={0.6} />
       </RoundedBox>
     </group>
   );
