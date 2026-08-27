@@ -1,18 +1,28 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import type { RefObject } from "react";
 
-const POOL_SIZE = 22;
-const MAX_AGE = 0.9; // seconds a trail dot stays visible
-const EMIT_INTERVAL = 0.045;
+const STEPS = 20;
+const WHEEL_OFFSETS = [
+  [-0.72, 0.72],
+  [0.72, 0.72],
+  [-0.72, -0.72],
+  [0.72, -0.72],
+] as const;
+const WHEEL_COUNT = 4;
+const TOTAL_BLOCKS = STEPS * WHEEL_COUNT;
+const MAX_AGE = 0.85; // seconds trail stays visible
+const EMIT_INTERVAL = 0.04;
 
 export default function Trail({ target }: { target: RefObject<THREE.Group | null> }) {
   const meshes = useRef<(THREE.Mesh | null)[]>([]);
-  const ages = useRef<number[]>(new Array(POOL_SIZE).fill(Infinity));
+  const ages = useRef<number[]>(new Array(TOTAL_BLOCKS).fill(Infinity));
   const positions = useRef<THREE.Vector3[]>(
-    Array.from({ length: POOL_SIZE }, () => new THREE.Vector3(0, -5, 0))
+    Array.from({ length: TOTAL_BLOCKS }, () => new THREE.Vector3(0, -10, 0))
   );
+  const rotations = useRef<number[]>(new Array(TOTAL_BLOCKS).fill(0));
   const timeSinceEmit = useRef(0);
   const lastEmitPos = useRef<THREE.Vector3 | null>(null);
 
@@ -21,25 +31,36 @@ export default function Trail({ target }: { target: RefObject<THREE.Group | null
     if (!t) return;
 
     timeSinceEmit.current += delta;
+    const moved = !lastEmitPos.current || lastEmitPos.current.distanceTo(t.position) > 0.08;
 
-    // Emit a new trail point periodically, if the cart has actually moved
-    if (
-      timeSinceEmit.current > EMIT_INTERVAL &&
-      (!lastEmitPos.current || lastEmitPos.current.distanceTo(t.position) > 0.15)
-    ) {
+    // Emit a new 4-wheel trail block periodically when the cart moves
+    if (timeSinceEmit.current > EMIT_INTERVAL && moved) {
       timeSinceEmit.current = 0;
-      // shift everything back one slot
-      for (let i = POOL_SIZE - 1; i > 0; i--) {
-        positions.current[i].copy(positions.current[i - 1]);
-        ages.current[i] = ages.current[i - 1];
+
+      // Shift everything back by 4 slots
+      for (let i = TOTAL_BLOCKS - 1; i >= WHEEL_COUNT; i--) {
+        positions.current[i].copy(positions.current[i - WHEEL_COUNT]);
+        rotations.current[i] = rotations.current[i - WHEEL_COUNT];
+        ages.current[i] = ages.current[i - WHEEL_COUNT];
       }
-      positions.current[0].copy(t.position);
-      positions.current[0].y = 0.02;
-      ages.current[0] = 0;
+
+      const cosY = Math.cos(t.rotation.y);
+      const sinY = Math.sin(t.rotation.y);
+
+      for (let w = 0; w < WHEEL_COUNT; w++) {
+        const [lx, lz] = WHEEL_OFFSETS[w];
+        const wx = t.position.x + (lx * cosY + lz * sinY);
+        const wz = t.position.z + (-lx * sinY + lz * cosY);
+
+        positions.current[w].set(wx, 0.015, wz);
+        rotations.current[w] = t.rotation.y;
+        ages.current[w] = 0;
+      }
+
       lastEmitPos.current = t.position.clone();
     }
 
-    for (let i = 0; i < POOL_SIZE; i++) {
+    for (let i = 0; i < TOTAL_BLOCKS; i++) {
       ages.current[i] += delta;
       const mesh = meshes.current[i];
       if (!mesh) continue;
@@ -50,27 +71,37 @@ export default function Trail({ target }: { target: RefObject<THREE.Group | null
       }
       mesh.visible = true;
       mesh.position.copy(positions.current[i]);
+      mesh.rotation.y = rotations.current[i];
       const life = 1 - age / MAX_AGE;
-      const scale = 0.35 * life + 0.08;
-      mesh.scale.setScalar(scale);
-      (mesh.material as THREE.MeshBasicMaterial).opacity = life * 0.5;
+      const scale = 0.4 + 0.6 * life;
+      mesh.scale.set(scale, 1, scale);
+      const mat = mesh.material as THREE.MeshStandardMaterial;
+      if (mat) {
+        mat.opacity = life * 0.45;
+      }
     }
   });
 
   return (
     <group>
-      {Array.from({ length: POOL_SIZE }).map((_, i) => (
-        <mesh
+      {Array.from({ length: TOTAL_BLOCKS }).map((_, i) => (
+        <RoundedBox
           key={i}
           ref={(el) => {
             meshes.current[i] = el;
           }}
-          rotation={[-Math.PI / 2, 0, 0]}
+          args={[0.22, 0.02, 0.28]}
+          radius={0.01}
           visible={false}
         >
-          <circleGeometry args={[1, 10]} />
-          <meshBasicMaterial color="#fff7d6" transparent opacity={0} depthWrite={false} />
-        </mesh>
+          <meshStandardMaterial
+            color="#214224"
+            transparent
+            opacity={0}
+            depthWrite={false}
+            roughness={0.9}
+          />
+        </RoundedBox>
       ))}
     </group>
   );

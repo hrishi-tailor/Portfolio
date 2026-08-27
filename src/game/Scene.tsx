@@ -8,28 +8,7 @@ import Trail from "./Trail";
 import Sign from "./Sign";
 import Course from "./Course";
 import CameraRig from "./CameraRig";
-import { projects } from "../data/content";
-import type { SignData } from "./Sign";
-
-const SIGNS: SignData[] = [
-  { id: "about", label: "ABOUT ME", position: [-4, 0, -10], rotationY: 0.3, accent: "#ffb000" },
-  {
-    id: projects[0].id,
-    label: projects[0].ticker,
-    position: [5, 0, -24],
-    rotationY: -0.3,
-    accent: "#3ddc84",
-  },
-  {
-    id: projects[1].id,
-    label: projects[1].ticker,
-    position: [-6, 0, -38],
-    rotationY: 0.3,
-    accent: "#3ddc84",
-  },
-  { id: "skills", label: "SKILLS", position: [5, 0, -50], rotationY: -0.3, accent: "#ffb000" },
-  { id: "contact", label: "CONTACT", position: [0, 0, -63], rotationY: 0, accent: "#ff9d3d" },
-];
+import { SIGNS } from "./terrain";
 
 const PROXIMITY_RADIUS = 4.5;
 

@@ -4,11 +4,15 @@ import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 import type { MutableRefObject } from "react";
 import type { KeyState } from "./useKeyboard";
+import { nearbyObstacles } from "./terrain";
 
 const MAX_SPEED = 7.5;
 const ACCEL = 9;
+const BRAKE_DECEL = 22;
 const FRICTION = 6;
 const TURN_SPEED = 2.4;
+const CART_RADIUS = 0.7;
+
 export type CartHandle = THREE.Group;
 
 /** Blocky wheel: outer black square with inner grey square */
@@ -221,10 +225,21 @@ const Cart = forwardRef<CartHandle, { keys: MutableRefObject<KeyState> }>(
       if (!g) return;
       const k = keys.current;
 
-      // Accelerate / decelerate
-      if (k.forward) speed.current += ACCEL * delta;
-      else if (k.back) speed.current -= ACCEL * delta;
-      else {
+      // Accelerate / decelerate / brake
+      if (k.forward && k.back) {
+        // Hard brake when both forward and backward are held
+        const sign = Math.sign(speed.current);
+        const deltaV = BRAKE_DECEL * delta;
+        if (Math.abs(speed.current) <= deltaV) {
+          speed.current = 0;
+        } else {
+          speed.current -= sign * deltaV;
+        }
+      } else if (k.forward) {
+        speed.current += ACCEL * delta;
+      } else if (k.back) {
+        speed.current -= ACCEL * delta;
+      } else {
         // Friction toward zero
         const sign = Math.sign(speed.current);
         speed.current -= sign * FRICTION * delta;
@@ -237,13 +252,46 @@ const Cart = forwardRef<CartHandle, { keys: MutableRefObject<KeyState> }>(
       if (k.left) g.rotation.y += TURN_SPEED * delta * turnFactor;
       if (k.right) g.rotation.y -= TURN_SPEED * delta * turnFactor;
 
-      // Move forward along heading
+      // Move forward along heading with obstacle collision detection
       const forward = new THREE.Vector3(
         Math.sin(g.rotation.y),
         0,
         Math.cos(g.rotation.y)
       );
-      g.position.addScaledVector(forward, speed.current * delta);
+
+      if (Math.abs(speed.current) > 0.001) {
+        const moveStep = forward.clone().multiplyScalar(speed.current * delta);
+        const nextX = g.position.x + moveStep.x;
+        const nextZ = g.position.z + moveStep.z;
+        const obstacles = nearbyObstacles(g.position.x, g.position.z);
+
+        const collidesAt = (px: number, pz: number) => {
+          for (const obs of obstacles) {
+            const dx = px - obs.x;
+            const dz = pz - obs.z;
+            if (dx * dx + dz * dz < (CART_RADIUS + obs.radius) ** 2) {
+              return true;
+            }
+          }
+          return false;
+        };
+
+        if (!collidesAt(nextX, nextZ)) {
+          g.position.x = nextX;
+          g.position.z = nextZ;
+        } else if (!collidesAt(nextX, g.position.z)) {
+          // Slide along X
+          g.position.x = nextX;
+          speed.current *= 0.5;
+        } else if (!collidesAt(g.position.x, nextZ)) {
+          // Slide along Z
+          g.position.z = nextZ;
+          speed.current *= 0.5;
+        } else {
+          // Direct impact - stop immediately
+          speed.current = 0;
+        }
+      }
 
       // Gentle driving bob
       const t = performance.now() / 1000;
@@ -267,7 +315,7 @@ const Cart = forwardRef<CartHandle, { keys: MutableRefObject<KeyState> }>(
     });
 
     return (
-      <group ref={group} position={[0, 0, 4]}>
+      <group ref={group} position={[0, 0, 4]} rotation={[0, Math.PI, 0]}>
         {/* Main Cart Structure */}
         <CartChassis />
 

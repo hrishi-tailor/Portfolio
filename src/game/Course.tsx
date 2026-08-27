@@ -3,42 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { RoundedBox } from "@react-three/drei";
 import type { RefObject } from "react";
-
-const TILE_SIZE = 24;
-const TILE_RADIUS = 3; // tiles in each direction from the cart -> (2*R+1)^2 tiles rendered
-
-/** Deterministic hash so the same tile always scatters the same trees/flags. */
-function hash(x: number, z: number, salt: number) {
-  const s = Math.sin(x * 127.1 + z * 311.7 + salt * 74.7) * 43758.5453;
-  return s - Math.floor(s);
-}
-
-type Decoration = { x: number; z: number; kind: "tree" | "bush" | "flag" | "bunker" };
-
-function decorationsForTile(tx: number, tz: number): Decoration[] {
-  const items: Decoration[] = [];
-  const originX = tx * TILE_SIZE;
-  const originZ = tz * TILE_SIZE;
-
-  for (let i = 0; i < 5; i++) {
-    const rx = hash(tx, tz, i * 3 + 1);
-    const rz = hash(tx, tz, i * 3 + 2);
-    const rk = hash(tx, tz, i * 3 + 3);
-    const localX = (rx - 0.5) * TILE_SIZE;
-    const localZ = (rz - 0.5) * TILE_SIZE;
-    // keep the middle lane clear so the sign path (tx === 0) stays drivable
-    if (tx === 0 && Math.abs(localX) < 5) continue;
-
-    let kind: Decoration["kind"] = "tree";
-    if (rk < 0.55) kind = "tree";
-    else if (rk < 0.8) kind = "bush";
-    else if (rk < 0.92) kind = "flag";
-    else kind = "bunker";
-
-    items.push({ x: originX + localX, z: originZ + localZ, kind });
-  }
-  return items;
-}
+import { TILE_SIZE, TILE_RADIUS, hash, decorationsForTile } from "./terrain";
 
 /** A blocky Minecraft-style tree: trunk + stacked rounded canopy cubes. No cones. */
 function BlockTree({ x, z }: { x: number; z: number }) {
@@ -93,6 +58,15 @@ function Bunker({ x, z }: { x: number; z: number }) {
   );
 }
 
+function Lake({ x, z }: { x: number; z: number }) {
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[x, 0.012, z]}>
+      <circleGeometry args={[1.8, 24]} />
+      <meshStandardMaterial color="#3b82a6" roughness={0.1} metalness={0.1} />
+    </mesh>
+  );
+}
+
 /** A single ground tile plus its decorations. */
 function Tile({ tx, tz }: { tx: number; tz: number }) {
   const items = useMemo(() => decorationsForTile(tx, tz), [tx, tz]);
@@ -112,7 +86,8 @@ function Tile({ tx, tz }: { tx: number; tz: number }) {
         if (d.kind === "tree") return <BlockTree key={i} x={d.x} z={d.z} />;
         if (d.kind === "bush") return <BlockBush key={i} x={d.x} z={d.z} />;
         if (d.kind === "flag") return <PinFlag key={i} x={d.x} z={d.z} />;
-        return <Bunker key={i} x={d.x} z={d.z} />;
+        if (d.kind === "bunker") return <Bunker key={i} x={d.x} z={d.z} />;
+        return <Lake key={i} x={d.x} z={d.z} />;
       })}
     </group>
   );
