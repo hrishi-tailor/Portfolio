@@ -8,9 +8,10 @@ import Trail from "./Trail";
 import Sign from "./Sign";
 import Course from "./Course";
 import CameraRig from "./CameraRig";
+import CartPath from "./CartPath";
 import { SIGNS } from "./terrain";
 
-const PROXIMITY_RADIUS = 4.5;
+const PROXIMITY_RADIUS = 6.0;
 
 export { SIGNS };
 
@@ -61,6 +62,7 @@ export default function Scene({
       />
 
       <Course target={cart} />
+      <CartPath />
 
       {SIGNS.map((sign) => (
         <Sign key={sign.id} data={sign} active={visited.has(sign.id)} />

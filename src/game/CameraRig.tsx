@@ -10,16 +10,22 @@ const OFFSET = new THREE.Vector3(11, 16, 11);
 
 export default function CameraRig({ target }: { target: RefObject<THREE.Group | null> }) {
   const camera = useRef<THREE.OrthographicCamera>(null!);
+  const desiredPos = useRef(new THREE.Vector3());
+  const lookTarget = useRef(new THREE.Vector3());
 
   useFrame((_, delta) => {
     const t = target.current;
     const cam = camera.current;
     if (!t || !cam) return;
 
-    const desired = new THREE.Vector3().copy(t.position).add(OFFSET);
-    const lerp = 1 - Math.pow(0.0005, delta);
-    cam.position.lerp(desired, lerp);
-    cam.lookAt(t.position.x, t.position.y + 0.6, t.position.z);
+    const dt = THREE.MathUtils.clamp(delta, 0.001, 0.05);
+    desiredPos.current.set(t.position.x + OFFSET.x, t.position.y + OFFSET.y, t.position.z + OFFSET.z);
+    cam.position.x = THREE.MathUtils.damp(cam.position.x, desiredPos.current.x, 10, dt);
+    cam.position.y = THREE.MathUtils.damp(cam.position.y, desiredPos.current.y, 10, dt);
+    cam.position.z = THREE.MathUtils.damp(cam.position.z, desiredPos.current.z, 10, dt);
+
+    lookTarget.current.set(t.position.x, t.position.y + 0.6, t.position.z);
+    cam.lookAt(lookTarget.current);
   });
 
   return (

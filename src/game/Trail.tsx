@@ -6,10 +6,10 @@ import type { RefObject } from "react";
 
 const STEPS = 20;
 const WHEEL_OFFSETS = [
-  [-0.72, 0.72],
-  [0.72, 0.72],
-  [-0.72, -0.72],
-  [0.72, -0.72],
+  [-0.43, 0.58],
+  [0.43, 0.58],
+  [-0.43, -0.58],
+  [0.43, -0.58],
 ] as const;
 const WHEEL_COUNT = 4;
 const TOTAL_BLOCKS = STEPS * WHEEL_COUNT;
@@ -90,7 +90,7 @@ export default function Trail({ target }: { target: RefObject<THREE.Group | null
           ref={(el) => {
             meshes.current[i] = el;
           }}
-          args={[0.22, 0.02, 0.28]}
+          args={[0.14, 0.02, 0.2]}
           radius={0.01}
           visible={false}
         >
