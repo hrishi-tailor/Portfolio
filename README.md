@@ -44,9 +44,8 @@ to `npm run build` with output directory `dist`.
 
 ## Notes / next steps
 
-- Swap the placeholder email in `src/data/content.ts` for your real one.
-- The "This Portfolio" project entry in `content.ts` is a placeholder - update
-  its `repo` link once this code is pushed to GitHub.
+- Contact email is configured as `tailorhrishi@gmail.com`.
+- The live project repo is linked to `https://github.com/hrishi-tailor/tailor-cards`.
 - Sounds, a minimap, or a "par" progress counter (mentioned in early design
   discussion) would be natural follow-ups but weren't built yet - the HUD
   already tracks `visitedCount` in `GameView.tsx` if you want to extend it.

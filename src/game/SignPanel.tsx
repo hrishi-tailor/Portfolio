@@ -67,11 +67,18 @@ function PanelBody({ signId }: { signId: string }) {
             </span>
           ))}
         </div>
-        {project.repo && (
-          <a href={project.repo} target="_blank" rel="noopener noreferrer">
-            View repository →
-          </a>
-        )}
+        <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap", marginTop: "0.5rem" }}>
+          {project.live && (
+            <a href={project.live} target="_blank" rel="noopener noreferrer">
+              Visit tailorcards.com →
+            </a>
+          )}
+          {project.repo && (
+            <a href={project.repo} target="_blank" rel="noopener noreferrer">
+              View repository →
+            </a>
+          )}
+        </div>
       </div>
     );
   }

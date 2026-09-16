@@ -93,16 +93,28 @@ export default function TextPortfolio() {
                   ))}
                 </div>
 
-                {project.repo && (
-                  <a
-                    className="ticket__link"
-                    href={project.repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    View repository →
-                  </a>
-                )}
+                <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap" }}>
+                  {project.live && (
+                    <a
+                      className="ticket__link"
+                      href={project.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Visit tailorcards.com →
+                    </a>
+                  )}
+                  {project.repo && (
+                    <a
+                      className="ticket__link"
+                      href={project.repo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View repository →
+                    </a>
+                  )}
+                </div>
               </article>
             ))}
           </div>
@@ -149,7 +161,7 @@ export default function TextPortfolio() {
             <p>
               <span className="console__flag">--linkedin</span>{" "}
               <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
-                {profile.linkedin.replace("https://", "")}
+                {profile.linkedin.replace("https://www.", "").replace("https://", "").replace(/\/$/, "")}
               </a>
             </p>
             <p>

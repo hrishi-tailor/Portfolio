@@ -177,7 +177,4 @@ cart redesign first; collision needs `terrain.ts`, which already exists):
 ## Non-goals / things intentionally left out
 - No localStorage/browser persistence (per project constraints) — any
   "remember last visited sign" type feature must live in React state only.
-- No sound by default (was discussed early on; add muted-by-default if ever
-  implemented, never autoplay with sound).
-- Real email address is still a placeholder in `content.ts` — don't ship
-  without swapping it.
+- Real email address has been swapped to tailorhrishi@gmail.com in content.ts.

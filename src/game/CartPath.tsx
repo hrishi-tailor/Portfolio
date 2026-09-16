@@ -80,7 +80,7 @@ function ClubhousePavilion() {
           anchorY="middle"
           fontWeight="bold"
         >
-          HRISHI TAILOR • SOFTWARE ENGINEER
+          HRISHI TAILOR • WATERLOO MATHEMATICS
         </Text>
       </Billboard>
 

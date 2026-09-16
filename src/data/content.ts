@@ -7,8 +7,8 @@ export const profile = {
   tagline: "Honours Mathematics student building full-stack platforms and software systems.",
   location: "Waterloo, ON",
   status: "OPEN TO SWE INTERNSHIPS - 2026",
-  email: "hrishi.tailor@example.com", // TODO: swap in real address
-  linkedin: "https://www.linkedin.com/in/hrishi-tailor-990696224/",
+  email: "tailorhrishi@gmail.com",
+  linkedin: "https://www.linkedin.com/in/hrishitailor/",
   github: "https://github.com/hrishi-tailor",
 };
 
@@ -33,6 +33,7 @@ export type Project = {
   stats: ProjectStat[];
   highlights: string[];
   repo?: string;
+  live?: string;
   featured?: boolean;
 };
 
@@ -43,7 +44,7 @@ export const projects: Project[] = [
     status: "LIVE",
     name: "Tailor Cards",
     pitch:
-      "Full-Stack E-Commerce Platform built with Spring Boot, PostgreSQL, and React. Deployed with custom domain via Render + Vercel.",
+      "Full-Stack E-Commerce Platform built with Spring Boot, PostgreSQL, and React. Deployed with custom domain at tailorcards.com via Render + Vercel.",
     stack: [
       "Spring Boot",
       "React",
@@ -56,16 +57,17 @@ export const projects: Project[] = [
     stats: [
       { label: "Backend", value: "Spring Boot + REST" },
       { label: "Database", value: "PostgreSQL + JPA" },
-      { label: "Frontend", value: "React + Custom Domain" },
+      { label: "Live Domain", value: "tailorcards.com" },
       { label: "Hosting", value: "Render + Vercel" },
     ],
     highlights: [
       "Architected a full-stack e-commerce web platform integrating a Spring Boot REST API backend with a responsive React frontend.",
       "Designed and managed a relational database schema using PostgreSQL and JPA/Hibernate for persistent data storage.",
       "Engineered secure, transactional RESTful endpoints handling product catalog management, search, and checkout workflows.",
-      "Configured continuous deployment and DNS routing with a custom domain across Render and Vercel hosting environments.",
+      "Configured continuous deployment and DNS routing with custom domain tailorcards.com across Render and Vercel hosting environments.",
     ],
     repo: "https://github.com/hrishi-tailor/tailor-cards",
+    live: "https://tailorcards.com",
     featured: true,
   },
 ];
@@ -85,7 +87,7 @@ export const experiences: Experience[] = [
     id: "exp-founder",
     role: "Founder",
     company: "Tailor Cards",
-    period: "2023 - Present",
+    period: "Sep 2024 - Present",
     summary: "Scaled trading card business to $11,000+ revenue across 123 transactions.",
     highlights: [
       "Founded and operated an online trading card enterprise, generating over $11,000 in gross revenue across 123 completed transactions.",
@@ -98,7 +100,7 @@ export const experiences: Experience[] = [
     id: "exp-boswin",
     role: "Coding Instructor",
     company: "Boswin Robotics",
-    period: "2023 - 2024",
+    period: "June 2026 - September 2026",
     summary: "Designed Python/Java curriculum for 200+ students.",
     highlights: [
       "Designed and delivered programming curriculum covering Python, Java, and algorithmic fundamentals for 200+ students.",
@@ -111,7 +113,7 @@ export const experiences: Experience[] = [
     id: "exp-tutoring",
     role: "Advanced Math/Science Tutor",
     company: "Independent Practice",
-    period: "2022 - Present",
+    period: "September 2022 - June 2025",
     summary: "Grew practice to 12 recurring students.",
     highlights: [
       "Established an independent STEM tutoring practice, scaling to 12 recurring students with individualized lesson plans.",
@@ -144,7 +146,7 @@ export const skills: SkillGroup[] = [
 
 export const tickerFacts = [
   "HRISHI TAILOR - UW MATH (2025 - 2030)",
-  "TAILOR CARDS: SPRING BOOT + REACT + POSTGRESQL",
+  "TAILOR CARDS: LIVE AT TAILORCARDS.COM",
   "FOUNDER: $11,000+ REVENUE ACROSS 123 SALES",
   "BOSWIN ROBOTICS: 200+ STUDENTS",
   "OPEN TO SWE INTERNSHIPS",
