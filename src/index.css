@@ -1,5 +1,5 @@
 :root {
-  /* Color — Bloomberg-terminal-adjacent, grounded in the trading-systems project */
+  /* Color - Bloomberg-terminal-adjacent, grounded in the trading-systems project */
   --bg: #0a0d0b;
   --bg-panel: #101512;
   --bg-panel-raised: #141a16;
@@ -83,7 +83,7 @@ button {
   color: #0a0d0b;
 }
 
-/* Blinking cursor — used sparingly after section headers, CLI-prompt style */
+/* Blinking cursor - used sparingly after section headers, CLI-prompt style */
 .cursor {
   display: inline-block;
   width: 0.55em;

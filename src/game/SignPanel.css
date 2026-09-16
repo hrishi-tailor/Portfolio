@@ -14,6 +14,7 @@
 }
 
 .sign-panel > div {
+  position: relative;
   width: min(560px, calc(100vw - 2rem));
   margin-bottom: 1.25rem;
   background: rgba(16, 21, 18, 0.92);
@@ -31,6 +32,62 @@
 .sign-panel--open > div {
   transform: translateY(0);
   opacity: 1;
+}
+
+.sign-panel .eyebrow {
+  padding-right: 4.5rem;
+}
+
+.sign-panel__close-btn {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  transition: all 0.15s ease;
+  z-index: 5;
+}
+
+.sign-panel__close-btn:hover,
+.sign-panel__close-btn:focus-visible {
+  background: rgba(255, 176, 0, 0.12);
+  border-color: var(--amber);
+  color: var(--amber);
+  outline: none;
+}
+
+.sign-panel__close-icon {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.sign-panel__close-kbd {
+  font-size: 0.65rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.05rem 0.35rem;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.sign-panel__close-btn:hover .sign-panel__close-kbd,
+.sign-panel__close-btn:focus-visible .sign-panel__close-kbd {
+  border-color: rgba(255, 176, 0, 0.4);
+  color: var(--amber);
 }
 
 .sign-panel h2 {

@@ -11,6 +11,7 @@ import "./GameView.css";
 export default function GameView() {
   const keys = useKeyboard();
   const [activeSign, setActiveSign] = useState<string | null>(null);
+  const [dismissedSignId, setDismissedSignId] = useState<string | null>(null);
   const [visitedCount, setVisitedCount] = useState(0);
   const [showHint, setShowHint] = useState(true);
   const visited = useRef<Set<string>>(new Set());
@@ -19,12 +20,32 @@ export default function GameView() {
     setActiveSign(id);
     if (id) {
       setShowHint(false);
+      // Reset dismissal state only when approaching a new sign
+      setDismissedSignId((prev) => (prev !== id ? null : prev));
       if (!visited.current.has(id)) {
         visited.current.add(id);
         setVisitedCount(visited.current.size);
       }
     }
   }, []);
+
+  const handleDismiss = useCallback(() => {
+    if (activeSign) {
+      setDismissedSignId(activeSign);
+    }
+  }, [activeSign]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "x" || e.key === "X") {
+        if (activeSign && activeSign !== dismissedSignId) {
+          setDismissedSignId(activeSign);
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeSign, dismissedSignId]);
 
   useEffect(() => {
     const dismiss = () => setShowHint(false);
@@ -64,7 +85,10 @@ export default function GameView() {
       )}
 
       <TouchControls state={keys} />
-      <SignPanel signId={activeSign} />
+      <SignPanel
+        signId={activeSign && activeSign !== dismissedSignId ? activeSign : null}
+        onDismiss={handleDismiss}
+      />
     </div>
   );
 }

@@ -1,10 +1,44 @@
+import { useState } from "react";
 import { about, experiences, profile, projects, skills } from "../data/content";
 import "./SignPanel.css";
 
-export default function SignPanel({ signId }: { signId: string | null }) {
+export default function SignPanel({
+  signId,
+  onDismiss,
+}: {
+  signId: string | null;
+  onDismiss?: () => void;
+}) {
+  const [prevSignId, setPrevSignId] = useState<string | null>(signId);
+  const [cachedSignId, setCachedSignId] = useState<string | null>(signId);
+
+  if (signId !== prevSignId) {
+    setPrevSignId(signId);
+    if (signId !== null) {
+      setCachedSignId(signId);
+    }
+  }
+
+  const displayId = signId || cachedSignId;
+
   return (
-    <div className={`sign-panel ${signId ? "sign-panel--open" : ""}`}>
-      {signId && <PanelBody signId={signId} />}
+    <div className={`sign-panel ${signId ? "sign-panel--open" : ""}`} aria-hidden={!signId}>
+      {displayId && (
+        <div className="sign-panel__card">
+          <button
+            type="button"
+            className="sign-panel__close-btn"
+            onClick={onDismiss}
+            aria-label="Close sign panel"
+            title="Close (or press X)"
+            tabIndex={signId ? 0 : -1}
+          >
+            <span aria-hidden="true" className="sign-panel__close-icon">✕</span>
+            <kbd className="sign-panel__close-kbd">X</kbd>
+          </button>
+          <PanelBody signId={displayId} />
+        </div>
+      )}
     </div>
   );
 }
@@ -12,7 +46,7 @@ export default function SignPanel({ signId }: { signId: string | null }) {
 function PanelBody({ signId }: { signId: string }) {
   if (signId === "about") {
     return (
-      <div>
+      <>
         <p className="eyebrow">{about.heading}</p>
         <h2>{profile.name}</h2>
         <p className="sign-panel__role mono">{profile.role}</p>
@@ -21,13 +55,13 @@ function PanelBody({ signId }: { signId: string }) {
             {p}
           </p>
         ))}
-      </div>
+      </>
     );
   }
 
   if (signId === "skills") {
     return (
-      <div>
+      <>
         <p className="eyebrow">Skills</p>
         <h2>Technical Arsenal</h2>
         {skills.map((group) => (
@@ -42,14 +76,14 @@ function PanelBody({ signId }: { signId: string }) {
             </div>
           </div>
         ))}
-      </div>
+      </>
     );
   }
 
   const project = projects.find((p) => p.id === signId);
   if (project) {
     return (
-      <div>
+      <>
         <p className="eyebrow">
           {project.ticker} · {project.status}
         </p>
@@ -79,14 +113,14 @@ function PanelBody({ signId }: { signId: string }) {
             </a>
           )}
         </div>
-      </div>
+      </>
     );
   }
 
   const exp = experiences.find((e) => e.id === signId);
   if (exp) {
     return (
-      <div>
+      <>
         <p className="eyebrow">
           Experience · {exp.period}
         </p>
@@ -105,13 +139,13 @@ function PanelBody({ signId }: { signId: string }) {
             </span>
           ))}
         </div>
-      </div>
+      </>
     );
   }
 
   if (signId === "contact") {
     return (
-      <div>
+      <>
         <p className="eyebrow">Contact</p>
         <h2>Get in Touch</h2>
         <p className="sign-panel__text mono">
@@ -126,7 +160,7 @@ function PanelBody({ signId }: { signId: string }) {
             GitHub
           </a>
         </p>
-      </div>
+      </>
     );
   }
 
