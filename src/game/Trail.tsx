@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { memo, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { RefObject } from "react";
 
 const STEPS = 20;
@@ -16,30 +16,43 @@ const TOTAL_BLOCKS = STEPS * WHEEL_COUNT;
 const MAX_AGE = 0.85; // seconds trail stays visible
 const EMIT_INTERVAL = 0.04;
 
-export default function Trail({ target }: { target: RefObject<THREE.Group | null> }) {
-  const meshes = useRef<(THREE.Mesh | null)[]>([]);
-  const ages = useRef<number[]>(new Array(TOTAL_BLOCKS).fill(Infinity));
-  const positions = useRef<THREE.Vector3[]>(
-    Array.from({ length: TOTAL_BLOCKS }, () => new THREE.Vector3(0, -10, 0))
-  );
-  const rotations = useRef<number[]>(new Array(TOTAL_BLOCKS).fill(0));
+const trailGeo = new RoundedBoxGeometry(0.14, 0.02, 0.2, 1, 0.01);
+const trailMat = new THREE.MeshStandardMaterial({
+  color: "#214224",
+  transparent: true,
+  opacity: 0.4,
+  depthWrite: false,
+  roughness: 0.9,
+});
+
+export default memo(function Trail({ target }: { target: RefObject<THREE.Group | null> }) {
+  const instancedRef = useRef<THREE.InstancedMesh>(null!);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const ages = useRef<Float32Array>(new Float32Array(TOTAL_BLOCKS).fill(Infinity));
+  const posX = useRef<Float32Array>(new Float32Array(TOTAL_BLOCKS).fill(0));
+  const posY = useRef<Float32Array>(new Float32Array(TOTAL_BLOCKS).fill(-10));
+  const posZ = useRef<Float32Array>(new Float32Array(TOTAL_BLOCKS).fill(0));
+  const rotations = useRef<Float32Array>(new Float32Array(TOTAL_BLOCKS).fill(0));
   const timeSinceEmit = useRef(0);
-  const lastEmitPos = useRef<THREE.Vector3 | null>(null);
+  const lastEmitPos = useRef(new THREE.Vector3(0, -999, 0));
 
   useFrame((_, delta) => {
     const t = target.current;
-    if (!t) return;
+    const im = instancedRef.current;
+    if (!t || !im) return;
 
     timeSinceEmit.current += delta;
-    const moved = !lastEmitPos.current || lastEmitPos.current.distanceTo(t.position) > 0.08;
+    const moved = lastEmitPos.current.distanceTo(t.position) > 0.08;
 
-    // Emit a new 4-wheel trail block periodically when the cart moves
+    // Emit new wheel tracks periodically when the cart moves
     if (timeSinceEmit.current > EMIT_INTERVAL && moved) {
       timeSinceEmit.current = 0;
 
-      // Shift everything back by 4 slots
+      // Shift existing blocks back by WHEEL_COUNT
       for (let i = TOTAL_BLOCKS - 1; i >= WHEEL_COUNT; i--) {
-        positions.current[i].copy(positions.current[i - WHEEL_COUNT]);
+        posX.current[i] = posX.current[i - WHEEL_COUNT];
+        posY.current[i] = posY.current[i - WHEEL_COUNT];
+        posZ.current[i] = posZ.current[i - WHEEL_COUNT];
         rotations.current[i] = rotations.current[i - WHEEL_COUNT];
         ages.current[i] = ages.current[i - WHEEL_COUNT];
       }
@@ -49,60 +62,49 @@ export default function Trail({ target }: { target: RefObject<THREE.Group | null
 
       for (let w = 0; w < WHEEL_COUNT; w++) {
         const [lx, lz] = WHEEL_OFFSETS[w];
-        const wx = t.position.x + (lx * cosY + lz * sinY);
-        const wz = t.position.z + (-lx * sinY + lz * cosY);
-
-        positions.current[w].set(wx, 0.015, wz);
+        posX.current[w] = t.position.x + (lx * cosY + lz * sinY);
+        posY.current[w] = 0.015;
+        posZ.current[w] = t.position.z + (-lx * sinY + lz * cosY);
         rotations.current[w] = t.rotation.y;
         ages.current[w] = 0;
       }
 
-      lastEmitPos.current = t.position.clone();
+      lastEmitPos.current.copy(t.position);
     }
 
+    let needsUpdate = false;
     for (let i = 0; i < TOTAL_BLOCKS; i++) {
       ages.current[i] += delta;
-      const mesh = meshes.current[i];
-      if (!mesh) continue;
       const age = ages.current[i];
       if (age >= MAX_AGE) {
-        mesh.visible = false;
+        dummy.position.set(0, -99, 0);
+        dummy.scale.set(0, 0, 0);
+        dummy.updateMatrix();
+        im.setMatrixAt(i, dummy.matrix);
+        needsUpdate = true;
         continue;
       }
-      mesh.visible = true;
-      mesh.position.copy(positions.current[i]);
-      mesh.rotation.y = rotations.current[i];
+
       const life = 1 - age / MAX_AGE;
       const scale = 0.4 + 0.6 * life;
-      mesh.scale.set(scale, 1, scale);
-      const mat = mesh.material as THREE.MeshStandardMaterial;
-      if (mat) {
-        mat.opacity = life * 0.45;
-      }
+      dummy.position.set(posX.current[i], posY.current[i], posZ.current[i]);
+      dummy.rotation.set(0, rotations.current[i], 0);
+      dummy.scale.set(scale, 1, scale);
+      dummy.updateMatrix();
+      im.setMatrixAt(i, dummy.matrix);
+      needsUpdate = true;
+    }
+
+    if (needsUpdate) {
+      im.instanceMatrix.needsUpdate = true;
     }
   });
 
   return (
-    <group>
-      {Array.from({ length: TOTAL_BLOCKS }).map((_, i) => (
-        <RoundedBox
-          key={i}
-          ref={(el) => {
-            meshes.current[i] = el;
-          }}
-          args={[0.14, 0.02, 0.2]}
-          radius={0.01}
-          visible={false}
-        >
-          <meshStandardMaterial
-            color="#214224"
-            transparent
-            opacity={0}
-            depthWrite={false}
-            roughness={0.9}
-          />
-        </RoundedBox>
-      ))}
-    </group>
+    <instancedMesh
+      ref={instancedRef}
+      args={[trailGeo, trailMat, TOTAL_BLOCKS]}
+      frustumCulled={false}
+    />
   );
-}
+});

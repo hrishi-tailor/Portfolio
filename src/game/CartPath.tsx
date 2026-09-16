@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import * as THREE from "three";
 import { RoundedBox, Text, Billboard } from "@react-three/drei";
 
-/** Control waypoints defining the continuous winding gravel trail passing alongside all 5 golf holes */
+/** Control waypoints defining the continuous winding gravel trail passing alongside all 6 golf holes */
 const PATH_WAYPOINTS: [number, number, number][] = [
   [0, 0.005, 4.2], // Starts at Cart Spawn Center with smooth flared driveway
   [0, 0.005, 2.0],
@@ -12,16 +12,21 @@ const PATH_WAYPOINTS: [number, number, number][] = [
   [-1.6, 0.005, -10], // Passes Hole 1 (About Me at [-5.5, 0, -10])
   [-0.6, 0.005, -16],
   [1.0, 0.005, -20],
-  [1.8, 0.005, -24], // Passes Hole 2 (Project 1 at [6.0, 0, -24])
+  [1.8, 0.005, -24], // Passes Hole 2 (Skills at [6.0, 0, -24])
   [0.8, 0.005, -30],
   [-1.0, 0.005, -34],
-  [-1.8, 0.005, -38], // Passes Hole 3 (Project 2 at [-6.5, 0, -38])
-  [-0.8, 0.005, -43],
-  [1.0, 0.005, -47],
-  [1.8, 0.005, -50], // Passes Hole 4 (Skills at [6.0, 0, -50])
-  [0.8, 0.005, -56],
-  [-0.6, 0.005, -60],
-  [-1.2, 0.005, -64], // Passes Hole 5 (Contact at [-4.0, 0, -64])
+  [-1.8, 0.005, -38], // Passes Hole 3 (Project: Tailor Cards at [-6.0, 0, -38])
+  [-0.8, 0.005, -44],
+  [1.0, 0.005, -48],
+  [1.8, 0.005, -52], // Passes Hole 4 (Exp: Founder at [6.0, 0, -52])
+  [0.8, 0.005, -58],
+  [-1.0, 0.005, -62],
+  [-1.8, 0.005, -66], // Passes Hole 5 (Exp: Boswin at [-6.0, 0, -66])
+  [-0.8, 0.005, -72],
+  [1.0, 0.005, -76],
+  [1.8, 0.005, -80], // Passes Hole 6 (Exp: Tutoring at [6.0, 0, -80])
+  [0.5, 0.005, -85],
+  [0.0, 0.005, -88], // Path turnaround
 ];
 
 /** Golf Course Clubhouse & Pro Shop Pavilion */
@@ -301,7 +306,7 @@ function StagingPlaza() {
   );
 }
 
-export default function CartPath() {
+export default memo(function CartPath() {
   const { pathGeo, borderGeo, pebbles } = useMemo(() => {
     const curve = new THREE.CatmullRomCurve3(
       PATH_WAYPOINTS.map(([x, y, z]) => new THREE.Vector3(x, y, z)),
@@ -310,7 +315,7 @@ export default function CartPath() {
       0.35
     );
 
-    const segments = 140;
+    const segments = 190;
 
     const pathPositions: number[] = [];
     const pathUVs: number[] = [];
@@ -430,4 +435,4 @@ export default function CartPath() {
       ))}
     </group>
   );
-}
+});

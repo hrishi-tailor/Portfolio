@@ -1,14 +1,14 @@
+import { memo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { OrthographicCamera } from "@react-three/drei";
-import { useRef } from "react";
 import * as THREE from "three";
 import type { RefObject } from "react";
 
-// Fixed world-space offset — the camera direction never rotates with the cart,
+// Fixed world-space offset: the camera direction never rotates with the cart,
 // giving the constant birds-eye/isometric angle Crossy Road uses.
 const OFFSET = new THREE.Vector3(11, 16, 11);
 
-export default function CameraRig({ target }: { target: RefObject<THREE.Group | null> }) {
+export default memo(function CameraRig({ target }: { target: RefObject<THREE.Group | null> }) {
   const camera = useRef<THREE.OrthographicCamera>(null!);
   const desiredPos = useRef(new THREE.Vector3());
   const lookTarget = useRef(new THREE.Vector3());
@@ -38,4 +38,4 @@ export default function CameraRig({ target }: { target: RefObject<THREE.Group | 
       position={[11, 16, 11]}
     />
   );
-}
+});

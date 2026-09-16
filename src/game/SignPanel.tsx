@@ -1,4 +1,4 @@
-import { about, profile, projects, skills } from "../data/content";
+import { about, experiences, profile, projects, skills } from "../data/content";
 import "./SignPanel.css";
 
 export default function SignPanel({ signId }: { signId: string | null }) {
@@ -25,6 +25,27 @@ function PanelBody({ signId }: { signId: string }) {
     );
   }
 
+  if (signId === "skills") {
+    return (
+      <div>
+        <p className="eyebrow">Skills</p>
+        <h2>Technical Arsenal</h2>
+        {skills.map((group) => (
+          <div key={group.category} className="sign-panel__skill-group">
+            <p className="eyebrow">{group.category}</p>
+            <div className="sign-panel__stack">
+              {group.items.map((item) => (
+                <span className="pill pill--outline" key={item}>
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   const project = projects.find((p) => p.id === signId);
   if (project) {
     return (
@@ -35,7 +56,7 @@ function PanelBody({ signId }: { signId: string }) {
         <h2>{project.name}</h2>
         <p className="sign-panel__text">{project.pitch}</p>
         <ul className="sign-panel__highlights">
-          {project.highlights.slice(0, 3).map((h, i) => (
+          {project.highlights.map((h, i) => (
             <li key={i}>{h}</li>
           ))}
         </ul>
@@ -55,23 +76,28 @@ function PanelBody({ signId }: { signId: string }) {
     );
   }
 
-  if (signId === "skills") {
+  const exp = experiences.find((e) => e.id === signId);
+  if (exp) {
     return (
       <div>
-        <p className="eyebrow">Skills</p>
-        <h2>Watchlist</h2>
-        {skills.map((group) => (
-          <div key={group.category} className="sign-panel__skill-group">
-            <p className="eyebrow">{group.category}</p>
-            <div className="sign-panel__stack">
-              {group.items.map((item) => (
-                <span className="pill pill--outline" key={item}>
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
+        <p className="eyebrow">
+          Experience · {exp.period}
+        </p>
+        <h2>{exp.role}</h2>
+        <p className="sign-panel__role mono">{exp.company}</p>
+        <p className="sign-panel__text">{exp.summary}</p>
+        <ul className="sign-panel__highlights">
+          {exp.highlights.map((h, i) => (
+            <li key={i}>{h}</li>
+          ))}
+        </ul>
+        <div className="sign-panel__stack">
+          {exp.stack.map((s) => (
+            <span className="pill" key={s}>
+              {s}
+            </span>
+          ))}
+        </div>
       </div>
     );
   }
@@ -80,7 +106,7 @@ function PanelBody({ signId }: { signId: string }) {
     return (
       <div>
         <p className="eyebrow">Contact</p>
-        <h2>Let's talk</h2>
+        <h2>Get in Touch</h2>
         <p className="sign-panel__text mono">
           <a href={`mailto:${profile.email}`}>{profile.email}</a>
         </p>

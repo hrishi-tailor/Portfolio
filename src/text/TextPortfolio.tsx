@@ -1,4 +1,4 @@
-import { profile, about, projects, skills } from "../data/content";
+import { profile, about, projects, skills, experiences } from "../data/content";
 import Ticker from "../components/Ticker";
 import NavToggle from "../components/NavToggle";
 import "./TextPortfolio.css";
@@ -31,6 +31,24 @@ export default function TextPortfolio() {
               {p}
             </p>
           ))}
+        </Section>
+
+        {/* Skills */}
+        <Section command="watchlist --show" title="Skills">
+          <div className="watchlist">
+            {skills.map((group) => (
+              <div className="watchlist__group" key={group.category}>
+                <p className="eyebrow">{group.category}</p>
+                <div className="watchlist__items">
+                  {group.items.map((item) => (
+                    <span className="pill pill--outline" key={item}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </Section>
 
         {/* Projects */}
@@ -90,20 +108,33 @@ export default function TextPortfolio() {
           </div>
         </Section>
 
-        {/* Skills */}
-        <Section command="watchlist --show" title="Skills">
-          <div className="watchlist">
-            {skills.map((group) => (
-              <div className="watchlist__group" key={group.category}>
-                <p className="eyebrow">{group.category}</p>
-                <div className="watchlist__items">
-                  {group.items.map((item) => (
-                    <span className="pill pill--outline" key={item}>
-                      {item}
+        {/* Experience */}
+        <Section command="history --experience" title="Experience">
+          <div className="tickets">
+            {experiences.map((exp) => (
+              <article className="ticket" key={exp.id}>
+                <header className="ticket__header">
+                  <span className="ticket__symbol mono">{exp.company.toUpperCase()}</span>
+                  <span className="ticket__status">{exp.period}</span>
+                </header>
+
+                <h3 className="ticket__name">{exp.role}</h3>
+                <p className="ticket__pitch">{exp.summary}</p>
+
+                <ul className="ticket__highlights">
+                  {exp.highlights.map((h, i) => (
+                    <li key={i}>{h}</li>
+                  ))}
+                </ul>
+
+                <div className="ticket__stack">
+                  {exp.stack.map((s) => (
+                    <span className="pill" key={s}>
+                      {s}
                     </span>
                   ))}
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </Section>

@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, memo, useImperativeHandle, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
@@ -646,7 +646,7 @@ const Cart = forwardRef<CartHandle, { keys: MutableRefObject<KeyState> }>(
       }
       speed.current = THREE.MathUtils.clamp(speed.current, -MAX_SPEED * 0.5, MAX_SPEED);
 
-      // Turning — scaled by speed, with reverse steering physics (S+D reverses right, S+A reverses left)
+      // Turning: scaled by speed, with reverse steering physics (S+D reverses right, S+A reverses left)
       const isReversing = speed.current < -0.05 || (k.back && !k.forward);
       const steerSign = isReversing ? -1 : 1;
       const turnFactor = THREE.MathUtils.clamp(Math.abs(speed.current) / 2, 0.4, 1);
@@ -799,4 +799,4 @@ const Cart = forwardRef<CartHandle, { keys: MutableRefObject<KeyState> }>(
   }
 );
 
-export default Cart;
+export default memo(Cart);

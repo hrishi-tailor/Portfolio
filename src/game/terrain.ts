@@ -1,24 +1,12 @@
-import { projects } from "../data/content";
 import type { SignData } from "./Sign";
 
 export const SIGNS: SignData[] = [
   { id: "about", label: "ABOUT ME", position: [-5.5, 0, -10], rotationY: 0.35, accent: "#ffb000" },
-  {
-    id: projects[0].id,
-    label: projects[0].ticker,
-    position: [6.0, 0, -24],
-    rotationY: -0.35,
-    accent: "#3ddc84",
-  },
-  {
-    id: projects[1].id,
-    label: projects[1].ticker,
-    position: [-6.5, 0, -38],
-    rotationY: 0.35,
-    accent: "#3ddc84",
-  },
-  { id: "skills", label: "SKILLS", position: [6.0, 0, -50], rotationY: -0.35, accent: "#ffb000" },
-  { id: "contact", label: "CONTACT", position: [-4.0, 0, -64], rotationY: 0.2, accent: "#ff9d3d" },
+  { id: "skills", label: "SKILLS", position: [6.0, 0, -24], rotationY: -0.35, accent: "#3ddc84" },
+  { id: "tailor-cards", label: "TAILOR CARDS", position: [-6.0, 0, -38], rotationY: 0.35, accent: "#ffb000" },
+  { id: "exp-founder", label: "EXP: FOUNDER", position: [6.0, 0, -52], rotationY: -0.35, accent: "#3ddc84" },
+  { id: "exp-boswin", label: "EXP: BOSWIN", position: [-6.0, 0, -66], rotationY: 0.35, accent: "#ffb000" },
+  { id: "exp-tutoring", label: "EXP: TUTORING", position: [6.0, 0, -80], rotationY: -0.35, accent: "#3ddc84" },
 ];
 
 export const TILE_SIZE = 24;
@@ -60,8 +48,14 @@ export type Obstacle = {
   kind: string;
 };
 
-/** Deterministic decorations for a given tile coordinate (tx, tz). */
+const tileDecorationCache = new Map<string, Decoration[]>();
+
+/** Deterministic decorations for a given tile coordinate (tx, tz). Cached per coordinate. */
 export function decorationsForTile(tx: number, tz: number): Decoration[] {
+  const cacheKey = `${tx},${tz}`;
+  const cached = tileDecorationCache.get(cacheKey);
+  if (cached) return cached;
+
   const items: Decoration[] = [];
   const originX = tx * TILE_SIZE;
   const originZ = tz * TILE_SIZE;
@@ -78,7 +72,7 @@ export function decorationsForTile(tx: number, tz: number): Decoration[] {
     const globalZ = originZ + localZ;
 
     // Keep fairway corridor clear along main sign path (tx === 0)
-    if (tx === 0 && Math.abs(localX) < 8.0 && globalZ > -72 && globalZ < 12) {
+    if (tx === 0 && Math.abs(localX) < 8.0 && globalZ > -92 && globalZ < 12) {
       if (rk < 0.3) {
         items.push({
           x: originX + localX,
@@ -116,15 +110,19 @@ export function decorationsForTile(tx: number, tz: number): Decoration[] {
             : undefined,
     });
   }
+  tileDecorationCache.set(cacheKey, items);
   return items;
 }
 
+const reusableObstacles: Obstacle[] = [];
+
 /**
  * Returns physical obstacles in the immediate neighborhood of (cartX, cartZ)
- * for collision calculation in Cart.tsx.
+ * for collision calculation in Cart.tsx. Reuses an internal array to prevent GC allocations.
  */
 export function nearbyObstacles(cartX: number, cartZ: number): Obstacle[] {
-  const obstacles: Obstacle[] = [];
+  reusableObstacles.length = 0;
+  const obstacles = reusableObstacles;
   const cx = Math.round(cartX / TILE_SIZE);
   const cz = Math.round(cartZ / TILE_SIZE);
   const maxDistSq = 64; // only check obstacles within 8 units

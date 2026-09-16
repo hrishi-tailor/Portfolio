@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Text, Billboard, RoundedBox } from "@react-three/drei";
 
 export type SignData = {
@@ -8,7 +9,7 @@ export type SignData = {
   accent?: string;
 };
 
-export default function Sign({ data, active }: { data: SignData; active: boolean }) {
+export default memo(function Sign({ data, active }: { data: SignData; active: boolean }) {
   const accent = data.accent ?? "#3ddc84";
 
   return (
@@ -85,4 +86,4 @@ export default function Sign({ data, active }: { data: SignData; active: boolean
       )}
     </group>
   );
-}
+});

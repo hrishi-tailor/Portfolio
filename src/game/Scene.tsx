@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { MutableRefObject } from "react";
@@ -15,7 +15,7 @@ const PROXIMITY_RADIUS = 6.0;
 
 export { SIGNS };
 
-export default function Scene({
+export default memo(function Scene({
   keys,
   onActiveSign,
 }: {
@@ -59,6 +59,13 @@ export default function Scene({
         intensity={1.1}
         castShadow
         shadow-mapSize={[1024, 1024]}
+        shadow-camera-left={-28}
+        shadow-camera-right={28}
+        shadow-camera-top={28}
+        shadow-camera-bottom={-28}
+        shadow-camera-near={0.5}
+        shadow-camera-far={50}
+        shadow-bias={-0.0005}
       />
 
       <Course target={cart} />
@@ -73,4 +80,4 @@ export default function Scene({
       <CameraRig target={cart} />
     </>
   );
-}
+});

@@ -2,8 +2,8 @@
 
 A two-mode portfolio:
 
-- **`/`** — a low-poly golf course you drive around (WASD, or on-screen controls on mobile). Signs mark About, Projects, Skills, and Contact — drive up to one and its content slides up from the bottom.
-- **`/text`** — a fast, text-only dashboard with the same content, styled like a trading terminal (a nod to the matching-engine project). Always reachable via the "Skip to text version" link in the top-right corner of the game, and it's what loads instantly since the 3D engine is code-split away from that route.
+- **`/`** - a low-poly golf course you drive around (WASD, or on-screen controls on mobile). Signs mark About, Skills, Projects, and Experience - drive up to one and its content slides up from the bottom.
+- **`/text`** - a fast, text-only dashboard with the same content, styled like a trading terminal. Always reachable via the "Skip to text version" link in the top-right corner of the game, and it loads instantly since the 3D engine is code-split away from that route.
 
 Both views read from a single content file, so there's one place to update your bio, projects, and skills.
 

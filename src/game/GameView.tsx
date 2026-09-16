@@ -1,5 +1,6 @@
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
+import * as THREE from "three";
 import Scene, { SIGNS } from "./Scene";
 import { useKeyboard } from "./useKeyboard";
 import TouchControls from "./TouchControls";
@@ -14,16 +15,16 @@ export default function GameView() {
   const [showHint, setShowHint] = useState(true);
   const visited = useRef<Set<string>>(new Set());
 
-  const handleActiveSign = (id: string | null) => {
+  const handleActiveSign = useCallback((id: string | null) => {
     setActiveSign(id);
     if (id) {
-      if (showHint) setShowHint(false);
+      setShowHint(false);
       if (!visited.current.has(id)) {
         visited.current.add(id);
         setVisitedCount(visited.current.size);
       }
     }
-  };
+  }, []);
 
   useEffect(() => {
     const dismiss = () => setShowHint(false);
@@ -33,7 +34,16 @@ export default function GameView() {
 
   return (
     <div className="game-view">
-      <Canvas shadows>
+      <Canvas
+        shadows={{ type: THREE.PCFSoftShadowMap }}
+        dpr={[1, 1.5]}
+        gl={{
+          powerPreference: "high-performance",
+          antialias: true,
+          stencil: false,
+          depth: true,
+        }}
+      >
         <Suspense fallback={null}>
           <Scene keys={keys} onActiveSign={handleActiveSign} />
         </Suspense>
@@ -49,7 +59,7 @@ export default function GameView() {
 
       {showHint && (
         <div className="game-hint mono" role="status">
-          Drive with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> — visit the signs
+          Drive with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> - visit the signs
         </div>
       )}
 

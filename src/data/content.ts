@@ -3,10 +3,10 @@
 
 export const profile = {
   name: "Hrishi Tailor",
-  role: "CS Student @ University of Waterloo",
-  tagline: "Building systems that stay correct under load.",
+  role: "BMath Honours Mathematics @ University of Waterloo (2025 - 2030)",
+  tagline: "Honours Mathematics student building full-stack platforms and software systems.",
   location: "Waterloo, ON",
-  status: "OPEN TO SWE INTERNSHIPS — 2026",
+  status: "OPEN TO SWE INTERNSHIPS - 2026",
   email: "hrishi.tailor@example.com", // TODO: swap in real address
   linkedin: "https://www.linkedin.com/in/hrishi-tailor-990696224/",
   github: "https://github.com/hrishi-tailor",
@@ -15,9 +15,9 @@ export const profile = {
 export const about = {
   heading: "About",
   body: [
-    "I'm a Computer Science student at the University of Waterloo, interested in backend systems, distributed architectures, and the kind of software where correctness under concurrency actually matters.",
-    "Most of what I build starts from a question about how real infrastructure works under the hood — order books, event streams, matching logic — and turns into a project I can pull apart and rebuild myself.",
-    "Right now I'm looking for a software engineering internship where I can keep building things that scale.",
+    "I am a BMath Honours Mathematics student at the University of Waterloo (2025 - 2030), passionate about full-stack software engineering and backend systems.",
+    "I enjoy architecting end-to-end applications with robust data models, clean REST APIs, and responsive interfaces.",
+    "Currently looking for software engineering internship opportunities to contribute and build impactful software.",
   ],
 };
 
@@ -25,7 +25,7 @@ export type ProjectStat = { label: string; value: string };
 
 export type Project = {
   id: string;
-  ticker: string; // short trading-style symbol, e.g. MATCH-ENG
+  ticker: string; // short trading-style symbol, e.g. TLR-CARDS
   status: "LIVE" | "FILLED" | "IN PROGRESS";
   name: string;
   pitch: string;
@@ -38,46 +38,87 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    id: "matching-engine",
-    ticker: "MATCH-ENG",
+    id: "tailor-cards",
+    ticker: "TLR-CARDS",
     status: "LIVE",
-    name: "Kafka Matching Engine",
+    name: "Tailor Cards",
     pitch:
-      "A limit order book matching engine with price-time priority, plus a connected Kafka-backed market data pipeline with rolling stats and anomaly detection.",
-    stack: ["Java", "Kafka", "Concurrency", "WebSocket"],
+      "Full-Stack E-Commerce Platform built with Spring Boot, PostgreSQL, and React. Deployed with custom domain via Render + Vercel.",
+    stack: [
+      "Spring Boot",
+      "React",
+      "PostgreSQL",
+      "JPA/Hibernate",
+      "REST APIs",
+      "Render",
+      "Vercel",
+    ],
     stats: [
-      { label: "Book structure", value: "TreeMap + LinkedHashMap" },
-      { label: "Cancel", value: "O(1) by order ID" },
-      { label: "Concurrency model", value: "Single-writer thread" },
+      { label: "Backend", value: "Spring Boot + REST" },
+      { label: "Database", value: "PostgreSQL + JPA" },
+      { label: "Frontend", value: "React + Custom Domain" },
+      { label: "Hosting", value: "Render + Vercel" },
     ],
     highlights: [
-      "Single dedicated thread owns and mutates the order book; producer threads enqueue onto a BlockingQueue, eliminating race conditions in the matching logic entirely — the same single-writer pattern LMAX Disruptor uses.",
-      "Prices stored as long (ticks), never floating point, to avoid rounding errors in trade execution.",
-      "Trade execution always honors the resting order's price — the core rule of price-time priority.",
-      "Market data pipeline computes rolling VWAP / moving average / volatility incrementally (O(1) per tick) and flags anomalies via z-score and spread-blowout detection.",
-      "EventBus is pluggable: in-memory for local dev, real Kafka producer/consumer for production — swap one line, zero other code changes.",
+      "Architected a full-stack e-commerce web platform integrating a Spring Boot REST API backend with a responsive React frontend.",
+      "Designed and managed a relational database schema using PostgreSQL and JPA/Hibernate for persistent data storage.",
+      "Engineered secure, transactional RESTful endpoints handling product catalog management, search, and checkout workflows.",
+      "Configured continuous deployment and DNS routing with a custom domain across Render and Vercel hosting environments.",
     ],
-    repo: "https://github.com/hrishi-tailor/matching-engine",
+    repo: "https://github.com/hrishi-tailor/tailor-cards",
     featured: true,
   },
+];
+
+export type Experience = {
+  id: string;
+  role: string;
+  company: string;
+  period: string;
+  summary: string;
+  highlights: string[];
+  stack: string[];
+};
+
+export const experiences: Experience[] = [
   {
-    id: "portfolio",
-    ticker: "PORT-SITE",
-    status: "IN PROGRESS",
-    name: "This Portfolio",
-    pitch:
-      "A two-mode portfolio: a low-poly golf-cart driving game for exploring projects, and this text dashboard for anyone who wants the facts fast.",
-    stack: ["React", "TypeScript", "Three.js", "React Three Fiber"],
-    stats: [
-      { label: "Game engine", value: "React Three Fiber" },
-      { label: "Fallback", value: "This page" },
-      { label: "Shared", value: "One content source" },
-    ],
+    id: "exp-founder",
+    role: "Founder",
+    company: "Tailor Cards",
+    period: "2023 - Present",
+    summary: "Scaled trading card business to $11,000+ revenue across 123 transactions.",
     highlights: [
-      "Both views read from the same content file, so the game and the text dashboard never drift out of sync.",
-      "Built the text version first as the reliable baseline, then layered the 3D scene on top as an enhancement.",
+      "Founded and operated an online trading card enterprise, generating over $11,000 in gross revenue across 123 completed transactions.",
+      "Managed end-to-end e-commerce operations, product sourcing, market pricing analysis, and customer fulfillment.",
+      "Leveraged customer transaction insights and inventory data to drive repeatable sales growth.",
     ],
-    repo: "https://github.com/hrishi-tailor/hrishi-tailor",
+    stack: ["E-Commerce", "Operations", "Market Analytics"],
+  },
+  {
+    id: "exp-boswin",
+    role: "Coding Instructor",
+    company: "Boswin Robotics",
+    period: "2023 - 2024",
+    summary: "Designed Python/Java curriculum for 200+ students.",
+    highlights: [
+      "Designed and delivered programming curriculum covering Python, Java, and algorithmic fundamentals for 200+ students.",
+      "Instructed students in object-oriented programming concepts, problem solving, and practical robotics applications.",
+      "Mentored students through interactive coding exercises, debugging sessions, and collaborative technology projects.",
+    ],
+    stack: ["Python", "Java", "Robotics", "Curriculum Design"],
+  },
+  {
+    id: "exp-tutoring",
+    role: "Advanced Math/Science Tutor",
+    company: "Independent Practice",
+    period: "2022 - Present",
+    summary: "Grew practice to 12 recurring students.",
+    highlights: [
+      "Established an independent STEM tutoring practice, scaling to 12 recurring students with individualized lesson plans.",
+      "Taught advanced high school mathematics and sciences, developing structured problem-solving frameworks.",
+      "Improved student academic performance and exam outcomes through personalized concept reinforcement.",
+    ],
+    stack: ["Advanced Mathematics", "STEM Pedagogy", "Mentorship"],
   },
 ];
 
@@ -87,16 +128,24 @@ export type SkillGroup = {
 };
 
 export const skills: SkillGroup[] = [
-  { category: "Languages", items: ["Java", "Python", "C++", "TypeScript", "Kotlin", "Swift"] },
-  { category: "Systems", items: ["Kafka", "Concurrency", "Data Structures", "OOP Design"] },
-  { category: "Web", items: ["React", "Node.js", "REST APIs"] },
-  { category: "Tools", items: ["Git", "Docker", "VS Code", "Linux"] },
+  {
+    category: "Languages",
+    items: ["Java", "JavaScript", "Python", "Swift", "HTML/CSS"],
+  },
+  {
+    category: "Frameworks & Backend",
+    items: ["Spring Boot", "React", "JPA/Hibernate", "REST APIs"],
+  },
+  {
+    category: "Databases & Tools",
+    items: ["PostgreSQL", "Git", "Xcode", "Render", "Vercel"],
+  },
 ];
 
 export const tickerFacts = [
-  "CS @ WATERLOO",
-  "MATCH-ENG: PRICE-TIME PRIORITY",
-  "KAFKA EVENT PIPELINES",
+  "HRISHI TAILOR - UW MATH (2025 - 2030)",
+  "TAILOR CARDS: SPRING BOOT + REACT + POSTGRESQL",
+  "FOUNDER: $11,000+ REVENUE ACROSS 123 SALES",
+  "BOSWIN ROBOTICS: 200+ STUDENTS",
   "OPEN TO SWE INTERNSHIPS",
-  "BUILT WITH REACT + THREE.JS",
 ];
