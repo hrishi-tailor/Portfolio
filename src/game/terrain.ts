@@ -71,8 +71,8 @@ export function decorationsForTile(tx: number, tz: number): Decoration[] {
     const localZ = (rz - 0.5) * TILE_SIZE;
     const globalZ = originZ + localZ;
 
-    // Keep fairway corridor clear along main sign path (tx === 0)
-    if (tx === 0 && Math.abs(localX) < 8.0 && globalZ > -92 && globalZ < 12) {
+    // Keep fairway corridor clear along main sign path and finale zone (tx === 0)
+    if (tx === 0 && Math.abs(localX) < 8.0 && globalZ > -108 && globalZ < 12) {
       if (rk < 0.3) {
         items.push({
           x: originX + localX,

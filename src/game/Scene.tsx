@@ -9,6 +9,7 @@ import Sign from "./Sign";
 import Course from "./Course";
 import CameraRig from "./CameraRig";
 import CartPath from "./CartPath";
+import Finale from "./Finale";
 import { SIGNS } from "./terrain";
 
 const PROXIMITY_RADIUS = 6.0;
@@ -24,6 +25,7 @@ export default memo(function Scene({
 }) {
   const cart = useRef<THREE.Group>(null!);
   const [visited, setVisited] = useState<Set<string>>(new Set());
+  const [finaleFinished, setFinaleFinished] = useState(false);
   const lastActive = useRef<string | null>(null);
 
   useFrame(() => {
@@ -38,6 +40,17 @@ export default memo(function Scene({
       if (dist < PROXIMITY_RADIUS && dist < closestDist) {
         closest = sign.id;
         closestDist = dist;
+      }
+    }
+    // Check finale circular landing pad at [0, 0, -96]
+    const fdx = c.position.x - 0;
+    const fdz = c.position.z - (-96);
+    const fdist = Math.sqrt(fdx * fdx + fdz * fdz);
+    if (fdist < 6.8 && fdist < closestDist) {
+      closest = "finale";
+      closestDist = fdist;
+      if (!finaleFinished) {
+        setFinaleFinished(true);
       }
     }
     if (closest !== lastActive.current) {
@@ -77,7 +90,8 @@ export default memo(function Scene({
 
       <Cart ref={cart} keys={keys} />
       <Trail target={cart} />
-      <CameraRig target={cart} />
+      <Finale active={finaleFinished} />
+      <CameraRig target={cart} finaleActive={finaleFinished} />
     </>
   );
 });

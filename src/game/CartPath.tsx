@@ -25,8 +25,9 @@ const PATH_WAYPOINTS: [number, number, number][] = [
   [-0.8, 0.005, -72],
   [1.0, 0.005, -76],
   [1.8, 0.005, -80], // Passes Hole 6 (Exp: Tutoring at [6.0, 0, -80])
-  [0.5, 0.005, -85],
-  [0.0, 0.005, -88], // Path turnaround
+  [0.8, 0.005, -85],
+  [0.0, 0.005, -90],
+  [0.0, 0.005, -96], // Enters Finale Landing Pad (Checkered Zone)
 ];
 
 /** Golf Course Clubhouse & Pro Shop Pavilion */
@@ -315,7 +316,7 @@ export default memo(function CartPath() {
       0.35
     );
 
-    const segments = 190;
+    const segments = 210;
 
     const pathPositions: number[] = [];
     const pathUVs: number[] = [];
